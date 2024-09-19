@@ -9,3 +9,4 @@ for i in range(10):
     led.off()
     sleep(2)
     sleep(1)
+    sleep(1)
