@@ -8,3 +8,4 @@ for i in range(10):
     sleep(2)
     led.off()
     sleep(2)
+    sleep(1)
