@@ -16,9 +16,24 @@ def init_oscilloscope():
     identity = oscilloscope.query('*IDN?')
     print(f'Connected to: {identity}')
 
+    oscilloscope.write('')
+
     oscilloscope.timeout = 5000
     oscilloscope.write_termination = '\n'
     oscilloscope.read_termination = '\n'
+    oscilloscope.write(':CHANnel1:PROBe 10')
+    oscilloscope.write(':CHANnel1:RANGe 10')
+    oscilloscope.write(':CHANnel1:OFFSet 0')
+    oscilloscope.write(':TIMebase:MODE MAIN')
+    oscilloscope.write(':TIMebase:RANGe 1E-3')
+    oscilloscope.write(':TIMebase:DELay 0')
+    oscilloscope.write(':TRIGger:SWEep NORMal')
+    oscilloscope.write(':TRIGger:LEVel 2')
+    oscilloscope.write(':TRIGger:SLOpe POSitive')
+
+    oscilloscope.write('ACQuire:TYPE NORMal')
+
+
 
     return oscilloscope
 
@@ -51,6 +66,17 @@ def meas_phase(oscilloscope, channel):
         print(f'Failed to measure phase: {e}')
     
     return float(phase)
+
+def digitize(oscilloscope):
+    oscilloscope.write(':DIGItize CHANnel1')
+    oscilloscope.write(':WAVeform:SOURce CHANnel1')
+    oscilloscope.write(':WAVeform:FORMat BYTE')
+    oscilloscope.write(':WAVeform:POINts 500')
+
+    result = oscilloscope.query(':WAVeform:DATA?')
+
+    return result
+
 # Main below
 
 # Variables:
@@ -79,6 +105,6 @@ try:
 except Exception as e:
     print(f'Measurement failed: {e}')
 
-    
+print(f'Digitized: {digitize(oscilloscope)}')
 # Close the connection
 oscilloscope.close()
