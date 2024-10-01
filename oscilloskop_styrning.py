@@ -143,7 +143,7 @@ low_freq = 40
 high_freq = 60
 frequency = 0
 channel = 1
-no_of_measurments = 10000
+no_of_measurments = 100
 
 # Init the oscilloscope.
 try:
