@@ -130,7 +130,7 @@ def get_raw_data(oscilloscope):
     raw_data = oscilloscope.query(':WAVeform:DATA?')
 
     df = pd.DataFrame(raw_data)
-    df.to_csv("./raw_data.csv",, index=False)
+    df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
     
 
