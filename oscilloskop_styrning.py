@@ -36,8 +36,6 @@ def init_oscilloscope():
 
     oscilloscope.write('ACQuire:TYPE NORMal')
 
-
-
     return oscilloscope
 
 def meas_freq(oscilloscope, no_of_measurments):
@@ -47,8 +45,6 @@ def meas_freq(oscilloscope, no_of_measurments):
             oscilloscope.write(':MEASure:FREQuency')
             freq = oscilloscope.query(':MEASure:FREQuency?')
             print(f'Frequency: {freq} Hz')
-            time.sleep(0.5)
-            #time.sleep(0.04)
             frequency_data.append(float(freq))
     except Exception as e:
         print(f'Failed to measure the frequency: {e}')
@@ -66,8 +62,7 @@ def analyze_freq(frequency_data, low_freq, high_freq):
         else:
             print(f'Frequency within range {low_freq} - {high_freq}')
 
-def meas_phase(oscilloscope, channel):
-     
+def meas_phase(oscilloscope, channel):   
     try:
         oscilloscope.write(':MEASure:PHASe')
         phase = oscilloscope.query(':MEASure:PHASe?')
@@ -78,15 +73,12 @@ def meas_phase(oscilloscope, channel):
     return float(phase)
 
 def meas_voltage(oscilloscope):
-    
     amplitude_data = []
     try:
         for no in range(no_of_measurments):
             oscilloscope.write(':MEASure:VAMPlitude')
             amp = oscilloscope.query(':MEASure:VAMPlitude?')
             print(f'Amplitude: {amp} V')
-            #time.sleep(0.5)
-            time.sleep(0.04)
             amplitude_data.append(float(amp))
     except Exception as e:
         print(f'Failed to measure the amplitude: {e}')
@@ -115,20 +107,34 @@ def visualisera_exportera(frequency_data, amplitude_data):
 
     # Exportera till CSV
     df = pd.DataFrame(data={'Frekvens':frequency_data, 'Amplitud':amplitude_data})
-    df.to_csv("./frekvens_data.csv", sep=',', index=False)
+    df.to_csv("./test_data.csv", sep=',', index=False)
     print("Data har exporterats till 'frekvens_data.csv'.")
 
 '''
 def digitize(oscilloscope):
     oscilloscope.write(':DIGItize CHANnel1')
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
-    oscilloscope.write(':WAVeform:FORMat BYTE')
+    oscilloscope.write(':WAVeform:FORMat ASCII')
     oscilloscope.write(':WAVeform:POINts 500')
 
     result = oscilloscope.query(':WAVeform:DATA?')
 
     return result
 '''
+def get_raw_data(oscilloscope):
+    
+    oscilloscope.write(':WAVeform:SOURce CHANnel1')
+    oscilloscope.write(':WAVeform:FORMat ASCII')
+    #oscilloscope.write(':WAVeform:POINts:MODE RAW') #Maybe make raw? Use :STOP function and later start again
+    oscilloscope.write(':WAVeform:POINts: 1000')
+    raw_data = oscilloscope.query(':WAVeform:DATA?')
+
+    df = pd.DataFrame(raw_data)
+    df.to_csv("./raw_data.csv",, index=False)
+    print("Data har exporterats till 'raw_data.csv'.")
+    
+
+
 # Main below
 
 # Variables:
@@ -137,7 +143,7 @@ low_freq = 40
 high_freq = 60
 frequency = 0
 channel = 1
-no_of_measurments = 10
+no_of_measurments = 10000
 
 # Init the oscilloscope.
 try:
@@ -154,26 +160,15 @@ except Exception as e:
 
 analyze_freq(frequency_data, low_freq, high_freq)
 
-# Read the phase
-'''try: 
-    phase = meas_phase(oscilloscope, 1)
-except Exception as e:
-    print(f'Measurement failed: {e}')
-'''
-
 try:
     amplitude_data = meas_voltage(oscilloscope)
 except Exception as e:
     print(f'Measurement failed: {e}')
 
 visualisera_exportera(frequency_data, amplitude_data)
-#Try to get Raw-dat
-'''
-with open('test.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer = digitize(oscilloscope)
-'''
+#Try to get Raw-data
 
-#print(f'Digitized: {digitize(oscilloscope)}')
+get_raw_data(oscilloscope)
+
 # Close the connection
 oscilloscope.close()
