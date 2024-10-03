@@ -110,17 +110,7 @@ def visualisera_exportera(frequency_data, amplitude_data):
     df.to_csv("./test_data.csv", sep=',', index=False)
     print("Data har exporterats till 'frekvens_data.csv'.")
 
-'''
-def digitize(oscilloscope):
-    oscilloscope.write(':DIGItize CHANnel1')
-    oscilloscope.write(':WAVeform:SOURce CHANnel1')
-    oscilloscope.write(':WAVeform:FORMat ASCII')
-    oscilloscope.write(':WAVeform:POINts 500')
 
-    result = oscilloscope.query(':WAVeform:DATA?')
-
-    return result
-'''
 def get_raw_data(oscilloscope):
     
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
@@ -129,7 +119,7 @@ def get_raw_data(oscilloscope):
     oscilloscope.write(':WAVeform:POINts: 1000')
     raw_data = oscilloscope.query(':WAVeform:DATA?')
 
-    df = pd.DataFrame(data=raw_data)
+    df = pd.DataFrame(raw_data)
     df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
     
