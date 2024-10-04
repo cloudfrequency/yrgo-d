@@ -41,8 +41,9 @@ def init_oscilloscope():
 def meas_freq(oscilloscope, no_of_measurments):
     frequency_data = []
     try:
+        oscilloscope.write(':MEASure:FREQuency')
         for no in range(no_of_measurments):
-            oscilloscope.write(':MEASure:FREQuency')
+            
             freq = oscilloscope.query(':MEASure:FREQuency?')
             print(f'Frequency: {freq} Hz')
             frequency_data.append(float(freq))
@@ -62,7 +63,7 @@ def analyze_freq(frequency_data, low_freq, high_freq):
         else:
             print(f'Frequency within range {low_freq} - {high_freq}')
 
-def meas_phase(oscilloscope, channel):   
+#def meas_phase(oscilloscope, channel):   
     try:
         oscilloscope.write(':MEASure:PHASe')
         phase = oscilloscope.query(':MEASure:PHASe?')
@@ -75,8 +76,9 @@ def meas_phase(oscilloscope, channel):
 def meas_voltage(oscilloscope):
     amplitude_data = []
     try:
+        oscilloscope.write(':MEASure:VAMPlitude')
         for no in range(no_of_measurments):
-            oscilloscope.write(':MEASure:VAMPlitude')
+            
             amp = oscilloscope.query(':MEASure:VAMPlitude?')
             print(f'Amplitude: {amp} V')
             amplitude_data.append(float(amp))
@@ -112,13 +114,13 @@ def visualisera_exportera(frequency_data, amplitude_data):
 
 
 def get_raw_data(oscilloscope):
-    
+    raw_data = []
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
     oscilloscope.write(':WAVeform:FORMat ASCII')
     #oscilloscope.write(':WAVeform:POINts:MODE RAW') #Maybe make raw? Use :STOP function and later start again
     oscilloscope.write(':WAVeform:POINts: 1000')
     raw_data = oscilloscope.query(':WAVeform:DATA?')
-
+    print(f'{type(raw_data)}')
     df = pd.DataFrame(raw_data)
     df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
@@ -132,7 +134,7 @@ def get_raw_data(oscilloscope):
 low_freq = 40
 high_freq = 60
 frequency = 0
-channel = 1
+#channel = 1
 no_of_measurments = 100
 
 # Init the oscilloscope.
