@@ -20,6 +20,7 @@ def init_oscilloscope():
     print(f'Connected to: {identity}')
 
     oscilloscope.write('')
+    oscilloscope.write('*RST')
 
     oscilloscope.timeout = 5000
     oscilloscope.write_termination = '\n'
@@ -76,6 +77,20 @@ def meas_voltage(oscilloscope):
 
     return amplitude_data
 
+def meas_nduty(oscilloscope):
+    nduty_data = []
+    try:
+        oscilloscope.write(':MEASure:NDUTy')
+        for no in range(no_of_measurments):
+            
+            duty = oscilloscope.query(':MEASure:NDUTy?')
+            print(f'Amplitude: {duty} V')
+            nduty_data.append(float(duty))
+    except Exception as e:
+        print(f'Failed to measure the amplitude: {e}')
+
+    return nduty_data
+
 # -------------------------------------------------------------
 # Block 4: Visualisera och exportera
 # -------------------------------------------------------------
@@ -97,20 +112,31 @@ def visualisera_exportera(frequency_data, amplitude_data):
     plt.show()
 
     # Exportera till CSV
+    print(f'Class of data: {type(frequency_data)}')
     df = pd.DataFrame(data={'Frekvens':frequency_data, 'Amplitud':amplitude_data})
     df.to_csv("./test_data.csv", sep=',', index=False)
     print("Data har exporterats till 'frekvens_data.csv'.")
 
 
 def get_raw_data(oscilloscope):
-    raw_data = []
+    #oscilloscope.write(':AUToscale')
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
     oscilloscope.write(':WAVeform:FORMat ASCII')
-    #oscilloscope.write(':WAVeform:POINts:MODE RAW') #Maybe make raw? Use :STOP function and later start again
-    oscilloscope.write(':WAVeform:POINts: 1000')
+    #oscilloscope.write(':WAVeform:POINts:MODE RAW') 
+    #oscilloscope.write(':WAVeform:POINts: 1000')
+    #oscilloscope.write(':WAVeform:DATA')
+    print(f'Innan query data')
     raw_data = oscilloscope.query(':WAVeform:DATA?')
-    print(f'{type(raw_data)}')
-    df = pd.DataFrame(raw_data)
+    print(f'efter query data {raw_data[:100]}')
+
+    #raw_data_ = raw_data.strip(' ')
+    raw_data_list = raw_data.split(',')[1:]
+    
+    raw_data_float = [float(val) for val in raw_data_list]
+
+    plt.plot(raw_data_float)
+    plt.show()
+    df = pd.DataFrame(raw_data_float)
     df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
     
@@ -124,7 +150,7 @@ low_freq = 40
 high_freq = 60
 frequency = 0
 #channel = 1
-no_of_measurments = 100
+no_of_measurments = 5
 
 # Init the oscilloscope.
 try:
@@ -149,7 +175,7 @@ except Exception as e:
 visualisera_exportera(frequency_data, amplitude_data)
 #Try to get Raw-data
 
-#get_raw_data(oscilloscope)
+get_raw_data(oscilloscope)
 
 # Close the connection
 oscilloscope.close()
