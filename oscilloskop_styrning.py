@@ -27,7 +27,6 @@ def init_oscilloscope():
     oscilloscope.write(':CHANnel1:PROBe 1')
     oscilloscope.write(':CHANnel1:RANGe 12')
     oscilloscope.write(':CHANnel1:OFFSet 0')
-    oscilloscope.write(':TIMebase:MODE MAIN')
     oscilloscope.write(':TIMebase:RANGe 40E-3')
     oscilloscope.write(':TIMebase:DELay 0')
     oscilloscope.write(':TRIGger:SWEep NORMal')
@@ -62,16 +61,6 @@ def analyze_freq(frequency_data, low_freq, high_freq):
             print(f'Frequency is higher than {high_freq} Hz')
         else:
             print(f'Frequency within range {low_freq} - {high_freq}')
-
-#def meas_phase(oscilloscope, channel):   
-    try:
-        oscilloscope.write(':MEASure:PHASe')
-        phase = oscilloscope.query(':MEASure:PHASe?')
-        print(f'Phase: {phase}')
-    except Exception as e:
-        print(f'Failed to measure phase: {e}')
-    
-    return float(phase)
 
 def meas_voltage(oscilloscope):
     amplitude_data = []
@@ -160,7 +149,7 @@ except Exception as e:
 visualisera_exportera(frequency_data, amplitude_data)
 #Try to get Raw-data
 
-get_raw_data(oscilloscope)
+#get_raw_data(oscilloscope)
 
 # Close the connection
 oscilloscope.close()
