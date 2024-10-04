@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import scipy.signal
+from gpiozero import PWMLED
 
 fs = 50000  # Samplingsfrekvens i Hz
 t = np.linspace(0, 1, fs)  # 1 s 
@@ -56,6 +57,13 @@ def display_plots():
     plt.grid(True)
     plt.show()
 
+pwm_pin = PWMLED(12, frequency=50)
+
+for i in range(500000):
+    if square_wave[i] == 1:
+        pwm_pin.on()
+    else:
+        pwm_pin.off()
 
 #Uncomment to display plots
 #display_plots()
