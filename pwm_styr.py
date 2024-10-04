@@ -59,8 +59,9 @@ def display_plots():
 
 pwm_pin = PWMLED(12, frequency=50)
 
-for i in range(50000):
-    if square_wave[i] == 1:
+for j in range(20):
+    for i in range(50000):
+        if square_wave[i] == 1:
         pwm_pin.on()
     else:
         pwm_pin.off()
