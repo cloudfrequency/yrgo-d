@@ -7,7 +7,6 @@ import numpy as np
 from threading import Thread
 
 def init_oscilloscope():
-
     rm = pyvisa.ResourceManager()
     res = rm.list_resources()
     print(f'Availible resources: ', res)
@@ -23,11 +22,13 @@ def init_oscilloscope():
 
     oscilloscope.write('')
     oscilloscope.write('*RST')
+    print(f'Oscilloscope reset.')
 
-    oscilloscope.timeout = 5000
+    oscilloscope.timeout = 10000
     oscilloscope.write_termination = '\n'
     oscilloscope.read_termination = '\n'
     oscilloscope.write(':CHANnel1:PROBe 1')
+    oscilloscope.write(':CHANnel2:PROBe 1')
     oscilloscope.write(':CHANnel1:RANGe 12')
     oscilloscope.write(':CHANnel1:OFFSet 0')
     oscilloscope.write(':TIMebase:RANGe 40E-3')
@@ -43,9 +44,9 @@ def init_oscilloscope():
 def meas_freq(oscilloscope, no_of_measurments):
     frequency_data = []
     try:
+        print(f'Meas_freq')
         oscilloscope.write(':MEASure:FREQuency')
         for no in range(no_of_measurments):
-            
             freq = oscilloscope.query(':MEASure:FREQuency?')
             print(f'Frequency: {freq} Hz')
             frequency_data.append(float(freq))
@@ -67,10 +68,10 @@ def analyze_freq(frequency_data, low_freq, high_freq):
 
 def meas_voltage(oscilloscope):
     amplitude_data = []
+    print(f'Meas_volt')
     try:
         oscilloscope.write(':MEASure:VAMPlitude')
         for no in range(no_of_measurments):
-            
             amp = oscilloscope.query(':MEASure:VAMPlitude?')
             print(f'Amplitude: {amp} V')
             amplitude_data.append(float(amp))
@@ -125,10 +126,15 @@ def get_raw_data(oscilloscope):
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
     oscilloscope.write(':AUToscale')
     oscilloscope.write(':WAVeform:FORMat ASCII')
-    #oscilloscope.write(':WAVeform:POINts:MODE RAW') 
-    #oscilloscope.write(':WAVeform:POINts: 1000')
-    #oscilloscope.write(':WAVeform:DATA')
 
+    preamble = oscilloscope.query(':WAVeform:PREamble?')
+    print(f'Preamble: {preamble}')
+    print(f'Preamble type: {type(preamble)}')
+    preamble_list = preamble.split(',')
+    preamble_list = [float(val) for val in preamble_list]
+    print(f'{preamble_list}')
+    #df = pd.DataFrame(preamble)
+    #df.to_csv("./preamble_raw_data.csv", index=False)
     raw_data = oscilloscope.query(':WAVeform:DATA?')
 
     #raw_data_ = raw_data.strip(' ')
@@ -143,8 +149,10 @@ def get_raw_data(oscilloscope):
     print("Data har exporterats till 'raw_data.csv'.")
 
     # Get channel 2 raw data
+    oscilloscope.timeout = 10000
     oscilloscope.write(':WAVeform:SOURce CHANnel2')
     oscilloscope.write(':AUToscale')
+    oscilloscope.write(':WAVeform:FORMat ASCII')
     raw_data_channel2 = oscilloscope.query(':WAVeform:DATA?')
 
     #raw_data_ = raw_data.strip(' ')
@@ -158,11 +166,26 @@ def get_raw_data(oscilloscope):
     df.to_csv("./raw_data_channel2.csv", index=False)
     print("Data har exporterats till 'raw_data_channel2.csv'.")
 
-def show_raw_data():
-    t = np.linspace(0, 0.02, 5000) 
-    fig, ax = plt.subplots(2)
-    ax[0].plot(t, pd.read_csv('./raw_data.csv'), color='blue')
-    ax[0].plot(t, pd.read_csv('./raw_data_channel2.csv'), color='red')
+def show_raw_data(): 
+    fig, ax = plt.subplots(3)
+    #fig.suptitle(f'Data acquired from: {oscilloscope.query('*IDN?')}')
+    #raw_data.csv
+    df = pd.read_csv('./raw_data.csv')
+    ax[0].set_ylim(np.min(df), np.max(df))
+    
+    ax[0].plot(df, color='blue')
+    ax[2].plot(df, color='blue')
+
+    #raw_data_channel2.csv
+    df = pd.read_csv('./raw_data_channel2.csv')
+    ax[1].set_ylim(np.min(df), np.max(df))
+    ax[1].plot(df, color='red')
+    ax[2].plot(df, color='red')
+
+    ax[0].set_title('Channel 1: Pre-filter')
+    ax[1].set_title('Channel 2: Post-filter')
+    ax[2].set_title('Channel 1 & 2 combined')
+    fig.savefig('output_data.pdf')
     plt.show()
 
 # Main below
@@ -173,14 +196,15 @@ low_freq = 40
 high_freq = 60
 frequency = 0
 #channel = 1
-no_of_measurments = 5
+no_of_measurments = 1
 
 # Init the oscilloscope.
+
 try:
     oscilloscope = init_oscilloscope()
 except Exception as e:
     print(f"Initialize failed: {e}")
-  
+'''
 # Read the frequency  
 try:
     frequency_data = meas_freq(oscilloscope, no_of_measurments)
@@ -194,7 +218,7 @@ try:
     amplitude_data = meas_voltage(oscilloscope)
 except Exception as e:
     print(f'Measurement failed: {e}')
-
+'''
 #Try to get Raw-data
 
 get_raw_data(oscilloscope)
