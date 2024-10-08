@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import scipy
 import scipy.signal
 #from gpiozero import PWMLED
-from gpiozero import LED
+#from gpiozero import LED
 
 fs = 5000  # Samplingsfrekvens i Hz
 t = np.linspace(0, 0.02, fs)  # 1 s 
@@ -22,10 +22,17 @@ for i in range(len(sinus)):
         square_wave.append(0)
 
 def display_plots():
-    #for i in range(len(square_wave)):
-    plt.plot(t, square_wave, label='SquareWave', color='green')
+    fig, ax = plt.subplots(2, 2)
+    ax[0][0].plot(t, sinus, color='blue')
+    ax[0][1].plot(t, sawtooth, color='red')
+    ax[1][0].plot(t, square_wave, color='green')
+    ax[1][1].plot(t, sinus, color='blue')
+    ax[1][1].plot(t, sawtooth, color='red')
+    ax[1][1].plot(t, square_wave, color='green')
+    fig.savefig('theoretic_waves.pdf')
     plt.show()
-    # Rita upp sinusvågen
+    
+    '''
     plt.figure(figsize=(10, 6))
     plt.plot(t, sinus, label='Ren sinus', color='blue')
     plt.title('Sinus')
@@ -44,6 +51,9 @@ def display_plots():
     plt.grid(True)
     plt.show()
 
+    plt.plot(t, square_wave, label='SquareWave', color='green')
+    plt.show()
+
     #new_t = np.linspace(0, 0.04, fs)
 
     plt.figure(figsize=(100, 60))
@@ -56,8 +66,8 @@ def display_plots():
     plt.legend()
     plt.grid(True)
     plt.show()
-
-
+'''
+'''
 pwm_pin = LED(12)
 for j in range(20):
     for i in range(len(square_wave)):
@@ -65,6 +75,6 @@ for j in range(20):
             pwm_pin.on()
         else:
             pwm_pin.off()
-
+'''
 #Uncomment to display plots
-#display_plots()
+display_plots()
