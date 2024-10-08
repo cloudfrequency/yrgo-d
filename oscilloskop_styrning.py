@@ -3,6 +3,8 @@ import time
 import csv
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+from threading import Thread
 
 def init_oscilloscope():
 
@@ -119,15 +121,15 @@ def visualisera_exportera(frequency_data, amplitude_data):
 
 
 def get_raw_data(oscilloscope):
-    #oscilloscope.write(':AUToscale')
+
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
+    oscilloscope.write(':AUToscale')
     oscilloscope.write(':WAVeform:FORMat ASCII')
     #oscilloscope.write(':WAVeform:POINts:MODE RAW') 
     #oscilloscope.write(':WAVeform:POINts: 1000')
     #oscilloscope.write(':WAVeform:DATA')
-    print(f'Innan query data')
+
     raw_data = oscilloscope.query(':WAVeform:DATA?')
-    print(f'efter query data {raw_data[:100]}')
 
     #raw_data_ = raw_data.strip(' ')
     raw_data_list = raw_data.split(',')[1:]
@@ -139,8 +141,29 @@ def get_raw_data(oscilloscope):
     df = pd.DataFrame(raw_data_float)
     df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
-    
 
+    # Get channel 2 raw data
+    oscilloscope.write(':WAVeform:SOURce CHANnel2')
+    oscilloscope.write(':AUToscale')
+    raw_data_channel2 = oscilloscope.query(':WAVeform:DATA?')
+
+    #raw_data_ = raw_data.strip(' ')
+    raw_data_channel2_list = raw_data_channel2.split(',')[1:]
+    
+    raw_data_channel2_float = [float(val) for val in raw_data_channel2_list]
+
+    plt.plot(raw_data_channel2_float)
+    plt.show()
+    df = pd.DataFrame(raw_data_channel2_float)
+    df.to_csv("./raw_data_channel2.csv", index=False)
+    print("Data har exporterats till 'raw_data_channel2.csv'.")
+
+def show_raw_data():
+    t = np.linspace(0, 0.02, 5000) 
+    fig, ax = plt.subplots(2)
+    ax[0].plot(t, pd.read_csv('./raw_data.csv'), color='blue')
+    ax[0].plot(t, pd.read_csv('./raw_data_channel2.csv'), color='red')
+    plt.show()
 
 # Main below
 
@@ -172,10 +195,12 @@ try:
 except Exception as e:
     print(f'Measurement failed: {e}')
 
-visualisera_exportera(frequency_data, amplitude_data)
 #Try to get Raw-data
 
 get_raw_data(oscilloscope)
+show_raw_data()
+
+# Här ska all data vara hämtad
 
 # Close the connection
 oscilloscope.close()
