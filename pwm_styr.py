@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import scipy
 import scipy.signal
 #from gpiozero import PWMLED
-#from gpiozero import LED
+from gpiozero import LED
 
 fs = 5000  # Samplingsfrekvens i Hz
 t = np.linspace(0, 0.02, fs)  # 1 s 
@@ -20,10 +20,6 @@ for i in range(len(sinus)):
         square_wave.append(1)
     else:
         square_wave.append(0)
-
-print(f'Length of Sinus: {len(sinus)}')
-print(f'Length of Sawtooth: {len(sawtooth)}')    
-print(f'Length of Square: {len(square_wave)}')
 
 def display_plots():
     #for i in range(len(square_wave)):
@@ -60,8 +56,8 @@ def display_plots():
     plt.legend()
     plt.grid(True)
     plt.show()
-'''
-#pwm_pin = PWMLED(12, frequency=50)
+
+
 pwm_pin = LED(12)
 for j in range(20):
     for i in range(len(square_wave)):
@@ -69,6 +65,6 @@ for j in range(20):
             pwm_pin.on()
         else:
             pwm_pin.off()
-'''
+
 #Uncomment to display plots
-display_plots()
+#display_plots()
