@@ -199,14 +199,14 @@ def show_raw_data():
     print(f'After ylim')
     # Combined graph needs special treatment
     print(f'Before np.min')
-    if np.min(raw_data_channel1) > np.min(raw_data_channel2):
-        pre_amble_min = np.min(raw_data_channel2)
+    if raw_data_channel1['0'].min() > raw_data_channel2['0'].min():
+        pre_amble_min = raw_data_channel2['0'].min()
     else:
-        pre_amble_min = np.min(raw_data_channel1)
-    if np.max(raw_data_channel1) > np.max(raw_data_channel2):
-        pre_amble_max = np.max(raw_data_channel1)
+        pre_amble_min = raw_data_channel1['0'].min()
+    if raw_data_channel1['0'].max() > raw_data_channel2['0'].max():
+        pre_amble_max = raw_data_channel1['0'].max()
     else:
-        pre_amble_max = np.max(raw_data_channel2)
+        pre_amble_max = raw_data_channel2['0'].max()
     print(f'After min/max')
     
     ax[2].set_ylim(pre_amble_min, pre_amble_max)
