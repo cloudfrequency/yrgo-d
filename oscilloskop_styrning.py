@@ -29,7 +29,7 @@ def init_oscilloscope():
     oscilloscope.read_termination = '\n'
     oscilloscope.write(':CHANnel1:PROBe 1')
     oscilloscope.write(':CHANnel2:PROBe 1')
-    oscilloscope.write(':CHANnel1:RANGe 12')
+    oscilloscope.write(':CHANnel1:RANGe 8')
     oscilloscope.write(':CHANnel2:RANGe 8')
     oscilloscope.write(':CHANnel1:OFFSet 0')
     oscilloscope.write(':TIMebase:RANGe 40E-3')
@@ -126,7 +126,7 @@ def get_raw_data(oscilloscope):
 
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
     #oscilloscope.write(':AUToscale')
-    oscilloscope.write(':CHANnel1:RANGe 4')
+    oscilloscope.write(':CHANnel1:RANGe 8')
     oscilloscope.write(':CHANnel1:OFFSet 0')
     oscilloscope.write(':TIMebase:RANGe 100E-3')
     oscilloscope.write(':TIMebase:DELay 0')
@@ -157,7 +157,7 @@ def get_raw_data(oscilloscope):
     # Get channel 2 raw data
     oscilloscope.timeout = 10000
     oscilloscope.write(':WAVeform:SOURce CHANnel2')
-    oscilloscope.write(':CHANnel2:RANGe 4')
+    oscilloscope.write(':CHANnel2:RANGe 8')
     oscilloscope.write(':CHANnel2:OFFSet 0')
     oscilloscope.write(':TIMebase:RANGe 100E-3')
     oscilloscope.write(':TIMebase:DELay 0')
