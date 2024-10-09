@@ -129,7 +129,7 @@ def visualisera_exportera(frequency_data, amplitude_data):
 def get_raw_data(oscilloscope):
 
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
-    #oscilloscope.write(':AUToscale')
+    oscilloscope.write(':AUToscale')
     #oscilloscope.write(':CHANnel1:RANGe 8')
     #oscilloscope.write(':CHANnel1:OFFSet 0')
     #oscilloscope.write(':TIMebase:RANGe 40E-3')
@@ -138,9 +138,10 @@ def get_raw_data(oscilloscope):
     oscilloscope.write(':WAVeform:FORMat ASCII')
     
     # Get preamble from Channel 1
+    print(f'Preamble 1')
     preamble = oscilloscope.query(':WAVeform:PREamble?')
-    print(f'Preamble: {preamble}')
-    print(f'Preamble type: {type(preamble)}')
+    print(f'Preamble 1 done: {preamble}')
+    
     preamble_list = preamble.split(',')
     preamble_list = [float(val) for val in preamble_list]
     print(f'{type(preamble_list)}')
