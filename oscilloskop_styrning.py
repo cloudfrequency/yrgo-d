@@ -159,16 +159,16 @@ def get_raw_data(oscilloscope):
     #plt.show()
 
     # Get channel 2 raw data
-    oscilloscope.timeout = 10000
+    oscilloscope.timeout = 1000
     oscilloscope.write(':WAVeform:SOURce CHANnel2')
-    #oscilloscope.write(':CHANnel2:RANGe 8')
-    #oscilloscope.write(':CHANnel1:OFFSet 0')
-    #oscilloscope.write(':TIMebase:RANGe 40E-3')
-    #oscilloscope.write(':TIMebase:DELay 0')
-    oscilloscope.write(':AUToscale')
-    #oscilloscope.write(':TIMebase:RANGe 40E-3')
+    oscilloscope.write(':CHANnel2:RANGe 8')
+    oscilloscope.write(':CHANnel1:OFFSet 0')
+    oscilloscope.write(':TIMebase:RANGe 40E-3')
+    oscilloscope.write(':TIMebase:DELay 0')
+    #oscilloscope.write(':AUToscale')
+    oscilloscope.write(':TIMebase:RANGe 40E-3')
     oscilloscope.write(':WAVeform:FORMat ASCII')
-
+    oscilloscope.timeout = 10000
     # Get preamble from channel 2
     
     preamble = oscilloscope.query(':WAVeform:PREamble?')
