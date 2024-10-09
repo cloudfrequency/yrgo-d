@@ -38,6 +38,7 @@ def init_oscilloscope():
     oscilloscope.write(':CHANnel2:OFFSet 0')
     oscilloscope.write(':TIMebase:RANGe 0.2')
     oscilloscope.write(':TIMebase:DELay 0')
+    oscilloscope.write(':TIMebase:MODE MAIN')
     oscilloscope.write(':TRIGger:SWEep NORMal')
     oscilloscope.write(':TRIGger:LEVel 2')
     oscilloscope.write(':TRIGger:SLOpe POSitive')
@@ -129,7 +130,7 @@ def visualisera_exportera(frequency_data, amplitude_data):
 def get_raw_data(oscilloscope):
 
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
-    oscilloscope.write(':AUToscale')
+    #oscilloscope.write(':AUToscale')
     #oscilloscope.write(':CHANnel1:RANGe 8')
     #oscilloscope.write(':CHANnel1:OFFSet 0')
     #oscilloscope.write(':TIMebase:RANGe 40E-3')
