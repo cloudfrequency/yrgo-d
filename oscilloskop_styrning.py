@@ -128,14 +128,15 @@ def visualisera_exportera(frequency_data, amplitude_data):
 
 
 def get_raw_data(oscilloscope):
-    oscilloscope.write(':AUToscale')
-    oscilloscope.write(':WAVeform:SOURce CHANnel1')
     
-    oscilloscope.write(':WAVeform:FORMat ASCII')
+    oscilloscope.write(":WAVeform:SOURce CHANnel1")
+    oscilloscope.write(":AUToscale")
+    oscilloscope.write(":WAVeform:FORMat ASCII")
     
     # Get preamble from Channel 1
     #print(f'Preamble 1')
-    preamble = oscilloscope.query(':WAVeform:PREamble?')
+    
+    preamble = oscilloscope.query(":WAVeform:PREamble?")
     #print(f'Preamble 1 done: {preamble}')
     
     preamble_list = preamble.split(',')
@@ -143,7 +144,7 @@ def get_raw_data(oscilloscope):
     #print(f'{type(preamble_list)}')
     df = pd.DataFrame(preamble_list)
     df.to_csv("./preamble_raw_data.csv", index=False)
-
+    
     # Get raw data from Channel 1
     raw_data = oscilloscope.query(':WAVeform:DATA?')
     raw_data_list = raw_data.split(',')[1:]
@@ -167,7 +168,7 @@ def get_raw_data(oscilloscope):
     oscilloscope.write(':WAVeform:FORMat ASCII')
 
     # Get preamble from channel 2
-
+    
     preamble = oscilloscope.query(':WAVeform:PREamble?')
     #print(f'Preamble: {preamble}')
     #print(f'Preamble type: {type(preamble)}')
@@ -176,7 +177,7 @@ def get_raw_data(oscilloscope):
     #print(f'{type(preamble_list)}')
     df = pd.DataFrame(preamble_list)
     df.to_csv("./preamble_raw_data_channel2.csv", index=False)
-
+    
     # Get raw data from channel 2
     raw_data_channel2 = oscilloscope.query(':WAVeform:DATA?')
     raw_data_channel2_list = raw_data_channel2.split(',')[1:]
