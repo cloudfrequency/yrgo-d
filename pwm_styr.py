@@ -5,9 +5,9 @@ import scipy.signal
 from gpiozero import LED
 import time
 
-fs = 8000  # Samplingsfrekvens i Hz
+fs = 5000  # Samplingsfrekvens i Hz
 f = 100  # Frekvens i Hz
-t = np.linspace(0, (1/f), fs)  # 0.02 s 
+t = np.linspace(0, (1/f), fs)  
 sinus = np.sin(2 * np.pi * f * t)
 pause_timer = fs / (1/f)
 f_saw = f*5 # Sawtooth Hz
