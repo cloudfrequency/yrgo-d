@@ -135,7 +135,7 @@ def get_raw_data(oscilloscope):
     
     # Get preamble from Channel 1
     #print(f'Preamble 1')
-    
+    oscilloscope.timeout = 10000
     preamble = oscilloscope.query(":WAVeform:PREamble?")
     #print(f'Preamble 1 done: {preamble}')
 
