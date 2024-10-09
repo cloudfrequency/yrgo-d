@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import scipy.signal
-#from gpiozero import LED
+from gpiozero import LED
 import time
 
 fs = 5000  # Samplingsfrekvens i Hz
