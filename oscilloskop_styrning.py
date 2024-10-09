@@ -208,14 +208,15 @@ def show_raw_data():
     xlim = pre_amble_channel1['0'][4] * pre_amble_channel1['0'][2]
     x_ticks = []
     x_positions = []
-    for i in range(11,1,-1):
-        x_ticks.append(xlim / (i))
-        x_positions.append(62500/i)
+    x_ticks.append(0)
+    for i in range(1,6,1):
+        x_ticks.append(round((xlim / 5)*i, 3))
+        
+    x_positions = [0, 12500, 25000, 37500, 50000, 62500]
     
-    
-    ax[0].set_xticks(x_ticks, x_positions)
-    ax[1].set_xticks(x_ticks, x_positions)
-    ax[2].set_xticks(x_ticks, x_positions)
+    ax[0].set_xticks(x_positions,x_ticks)
+    ax[1].set_xticks(x_positions,x_ticks)
+    ax[2].set_xticks(x_positions, x_ticks)
     
     ax[0].set_title('Channel 1: Pre-filter')
     ax[1].set_title('Channel 2: Post-filter')
