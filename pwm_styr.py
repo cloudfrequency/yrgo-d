@@ -38,8 +38,10 @@ while time.time() - start_time < 120:
         for i in range(len(square_wave)):
             if square_wave[i] == 1:
                 pwm_pin.on()
+                time.sleep((1/f) / fs)
             else:
                 pwm_pin.off()
+                time.sleep((1/f) / fs)
 
 # Debug
 #display_plots()
