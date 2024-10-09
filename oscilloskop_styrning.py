@@ -187,8 +187,11 @@ def show_raw_data():
     raw_data_channel1 = pd.read_csv('./raw_data.csv')
     raw_data_channel2 = pd.read_csv('./raw_data_channel2.csv')
     print(f'Before ylim')
-    ax[0].set_ylim(np.min(raw_data_channel1), np.max(raw_data_channel1))
-    ax[1].set_ylim(np.min(raw_data_channel2), np.max(raw_data_channel2))
+    ax[0].set_ylim(raw_data_channel1.min(), raw_data_channel1.max())
+    #ax[1].set_ylim(np.min(raw_data_channel2), np.max(raw_data_channel2))
+
+    #ax[0].set_ylim(np.min(raw_data_channel1), np.max(raw_data_channel1))
+    #ax[1].set_ylim(np.min(raw_data_channel2), np.max(raw_data_channel2))
     print(f'After ylim')
     # Combined graph needs special treatment
     print(f'Before np.min')
