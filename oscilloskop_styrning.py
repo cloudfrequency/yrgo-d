@@ -24,16 +24,19 @@ def init_oscilloscope():
     oscilloscope.write('*RST')
     print(f'Oscilloscope reset.')
 
-    oscilloscope.timeout = 10000
+    oscilloscope.timeout = 1000
     oscilloscope.write_termination = '\n'
     oscilloscope.read_termination = '\n'
+    
     oscilloscope.write(':CHANnel1:PROBe 1')
     oscilloscope.write(':CHANnel2:PROBe 1')
-    oscilloscope.write(':CHANnel1:RANGe 8')
-    oscilloscope.write(':CHANnel2:RANGe 8')
+    oscilloscope.write(':AUToscale')
+    oscilloscope.timeout = 1000
+    oscilloscope.write(':CHANnel1:RANGe 5')
+    oscilloscope.write(':CHANnel2:RANGe 5')
     oscilloscope.write(':CHANnel1:OFFSet 0')
     oscilloscope.write(':CHANnel2:OFFSet 0')
-    oscilloscope.write(':TIMebase:RANGe 40E-3')
+    oscilloscope.write(':TIMebase:RANGe 1')
     oscilloscope.write(':TIMebase:DELay 0')
     oscilloscope.write(':TRIGger:SWEep NORMal')
     oscilloscope.write(':TRIGger:LEVel 2')
@@ -126,7 +129,7 @@ def visualisera_exportera(frequency_data, amplitude_data):
 def get_raw_data(oscilloscope):
 
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
-    oscilloscope.write(':AUToscale')
+    #oscilloscope.write(':AUToscale')
     #oscilloscope.write(':CHANnel1:RANGe 8')
     #oscilloscope.write(':CHANnel1:OFFSet 0')
     #oscilloscope.write(':TIMebase:RANGe 40E-3')
@@ -161,9 +164,9 @@ def get_raw_data(oscilloscope):
     #oscilloscope.write(':CHANnel2:RANGe 8')
     #oscilloscope.write(':CHANnel2:OFFSet 0')
     
-    oscilloscope.write(':TIMebase:DELay 0')
+    #oscilloscope.write(':TIMebase:DELay 0')
     
-    oscilloscope.write(':AUToscale')
+    #oscilloscope.write(':AUToscale')
     #oscilloscope.write(':TIMebase:RANGe 40E-3')
     oscilloscope.write(':WAVeform:FORMat ASCII')
 
