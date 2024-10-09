@@ -189,6 +189,8 @@ def show_raw_data():
     print(f'Before ylim')
     ax[0].set_ylim(0,2)
     ax[1].set_ylim(-1, 1)
+    print(f'raw_data_channel1.min(): {raw_data_channel1.min()}')
+    print(f'type: raw_data_channel1.min() : {type(raw_data_channel1.min())}')
     #ax[0].set_ylim(raw_data_channel1.min(), raw_data_channel1.max())
     #ax[1].set_ylim(raw_data_channel2.min(), raw_data_channel2.max())
     #print(f'npmin : {np.min(raw_data_channel1)}')
