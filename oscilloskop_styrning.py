@@ -128,9 +128,9 @@ def visualisera_exportera(frequency_data, amplitude_data):
 
 
 def get_raw_data(oscilloscope):
-
-    oscilloscope.write(':WAVeform:SOURce CHANnel1')
     oscilloscope.write(':AUToscale')
+    oscilloscope.write(':WAVeform:SOURce CHANnel1')
+    
     oscilloscope.write(':WAVeform:FORMat ASCII')
     
     # Get preamble from Channel 1
