@@ -178,7 +178,7 @@ def get_raw_data(oscilloscope):
 
 def show_raw_data(): 
     fig, ax = plt.subplots(3)
-    fig.suptitle(f'Data acquired from: {oscilloscope.query('*IDN?')}')
+    fig.suptitle(f"Data acquired from: {oscilloscope.query('*IDN?')}")
     
     # Read the csvs
 
