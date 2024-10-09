@@ -129,9 +129,9 @@ def get_raw_data(oscilloscope):
     oscilloscope.write(':AUToscale')
     #oscilloscope.write(':CHANnel1:RANGe 8')
     #oscilloscope.write(':CHANnel1:OFFSet 0')
-    oscilloscope.write(':TIMebase:RANGe 40E-3')
-    oscilloscope.write(':TIMebase:DELay 0')
-    oscilloscope.timeout = 100
+    #oscilloscope.write(':TIMebase:RANGe 40E-3')
+    #oscilloscope.write(':TIMebase:DELay 0')
+    #oscilloscope.timeout = 100
     oscilloscope.write(':WAVeform:FORMat ASCII')
     
     # Get preamble from Channel 1
@@ -162,9 +162,9 @@ def get_raw_data(oscilloscope):
     #oscilloscope.write(':CHANnel2:OFFSet 0')
     
     oscilloscope.write(':TIMebase:DELay 0')
-    oscilloscope.timeout = 100
+    
     oscilloscope.write(':AUToscale')
-    oscilloscope.write(':TIMebase:RANGe 40E-3')
+    #oscilloscope.write(':TIMebase:RANGe 40E-3')
     oscilloscope.write(':WAVeform:FORMat ASCII')
 
     # Get preamble from channel 2
