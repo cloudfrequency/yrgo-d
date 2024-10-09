@@ -178,7 +178,7 @@ def get_raw_data(oscilloscope):
 
 def show_raw_data(): 
     fig, ax = plt.subplots(3)
-    #fig.suptitle(f'Data acquired from: {oscilloscope.query('*IDN?')}')
+    fig.suptitle(f'Data acquired from: {oscilloscope.query('*IDN?')}')
     
     # Read the csvs
 
@@ -201,10 +201,7 @@ def show_raw_data():
         pre_amble_max = np.max(raw_data_channel2)
     
     ax[2].set_ylim(pre_amble_min, pre_amble_max)
-    print(f'{type(pre_amble_channel1)}')
-    print(f'{pre_amble_channel1}')
-    #print(f'{pre_amble_channel1[4][1]}')
-    print(f'{type(pre_amble_channel1['0'][4])}')
+
     xlim = pre_amble_channel1['0'][4] * pre_amble_channel1['0'][2]
     x_ticks = []
     x_positions = []
