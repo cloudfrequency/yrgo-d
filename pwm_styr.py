@@ -6,11 +6,11 @@ from gpiozero import LED
 import time
 
 fs = 5000  # Samplingsfrekvens i Hz
-f = 1000  # Frekvens i Hz
+f = 50  # Frekvens i Hz
 t = np.linspace(0, (1/f), fs)  
 sinus = np.sin(2 * np.pi * f * t)
 pause_timer = fs / (1/f)
-f_saw = f*5 # Sawtooth Hz
+f_saw = f*50 # Sawtooth Hz
 sawtooth = scipy.signal.sawtooth(2 * np.pi * f_saw * t)
 
 square_wave = []
@@ -30,7 +30,7 @@ def display_plots():
     ax[1][1].plot(t, square_wave, color='green')
     fig.savefig('theoretic_waves.pdf')
     plt.show()
-    
+
 start_time = time.time()
 pwm_pin = LED(12)
 while time.time() - start_time < 120: 
@@ -44,4 +44,4 @@ while time.time() - start_time < 120:
             #time.sleep((1/f) / fs)
 
 # Debug
-#display_plots()
+display_plots()
