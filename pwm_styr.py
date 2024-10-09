@@ -6,7 +6,7 @@ from gpiozero import LED
 import time
 
 fs = 5000  # Samplingsfrekvens i Hz
-f = 100  # Frekvens i Hz
+f = 1000  # Frekvens i Hz
 t = np.linspace(0, (1/f), fs)  
 sinus = np.sin(2 * np.pi * f * t)
 pause_timer = fs / (1/f)
