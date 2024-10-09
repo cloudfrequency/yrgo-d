@@ -186,11 +186,12 @@ def show_raw_data():
     pre_amble_channel2 = pd.read_csv('./preamble_raw_data_channel2.csv')
     raw_data_channel1 = pd.read_csv('./raw_data.csv')
     raw_data_channel2 = pd.read_csv('./raw_data_channel2.csv')
-    
+    print(f'Before ylim')
     ax[0].set_ylim(np.min(raw_data_channel1), np.max(raw_data_channel1))
     ax[1].set_ylim(np.min(raw_data_channel2), np.max(raw_data_channel2))
-    
+    print(f'After ylim')
     # Combined graph needs special treatment
+    print(f'Before np.min')
     if np.min(raw_data_channel1) > np.min(raw_data_channel2):
         pre_amble_min = np.min(raw_data_channel2)
     else:
@@ -199,6 +200,7 @@ def show_raw_data():
         pre_amble_max = np.max(raw_data_channel1)
     else:
         pre_amble_max = np.max(raw_data_channel2)
+    print(f'After min/max')
     
     ax[2].set_ylim(pre_amble_min, pre_amble_max)
 
@@ -210,11 +212,11 @@ def show_raw_data():
         x_ticks.append(round((xlim / 5)*i, 3))
         
     x_positions = [0, 12500, 25000, 37500, 50000, 62500]
-    
+    print(f'Before xticks')
     ax[0].set_xticks(x_positions,x_ticks)
     ax[1].set_xticks(x_positions,x_ticks)
     ax[2].set_xticks(x_positions, x_ticks)
-    
+    print(f'After xticks')
     ax[0].set_title('Channel 1: Pre-filter')
     ax[1].set_title('Channel 2: Post-filter')
     ax[2].set_title('Channel 1 & 2 combined')
