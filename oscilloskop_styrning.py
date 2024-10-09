@@ -138,6 +138,8 @@ def get_raw_data(oscilloscope):
     
     preamble = oscilloscope.query(":WAVeform:PREamble?")
     #print(f'Preamble 1 done: {preamble}')
+
+    oscilloscope.timeout = 10000
     
     preamble_list = preamble.split(',')
     preamble_list = [float(val) for val in preamble_list]
