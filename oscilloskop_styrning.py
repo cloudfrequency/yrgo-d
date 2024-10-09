@@ -34,9 +34,9 @@ def init_oscilloscope():
     oscilloscope.timeout = 1000
     oscilloscope.write(':CHANnel1:RANGe 5')
     oscilloscope.write(':CHANnel2:RANGe 5')
-    oscilloscope.write(':CHANnel1:OFFSet 0')
+    oscilloscope.write(':CHANnel1:OFFSet -3')
     oscilloscope.write(':CHANnel2:OFFSet 0')
-    oscilloscope.write(':TIMebase:RANGe 1')
+    oscilloscope.write(':TIMebase:RANGe 0.05')
     oscilloscope.write(':TIMebase:DELay 0')
     oscilloscope.write(':TRIGger:SWEep NORMal')
     oscilloscope.write(':TRIGger:LEVel 2')
