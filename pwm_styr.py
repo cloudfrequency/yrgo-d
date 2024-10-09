@@ -10,7 +10,7 @@ f = 50  # Frekvens i Hz
 t = np.linspace(0, (1/f), fs)  
 sinus = np.sin(2 * np.pi * f * t)
 pause_timer = fs / (1/f)
-f_saw = f*20 # Sawtooth Hz
+f_saw = f*50 # Sawtooth Hz
 sawtooth = scipy.signal.sawtooth(2 * np.pi * f_saw * t)
 
 square_wave = []
