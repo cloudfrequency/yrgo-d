@@ -2,15 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import scipy.signal
-from gpiozero import LED
+#from gpiozero import LED
+import time
 
 fs = 5000  # Samplingsfrekvens i Hz
-t = np.linspace(0, 0.02, fs)  # 1 s 
-
 f = 50  # Frekvens i Hz
+t = np.linspace(0, (1/f), fs)  # 0.02 s 
 sinus = np.sin(2 * np.pi * f * t)
-
-f_saw = 250 # Sawtooth Hz
+pause_timer = fs / (1/f)
+f_saw = f*5 # Sawtooth Hz
 sawtooth = scipy.signal.sawtooth(2 * np.pi * f_saw * t)
 
 square_wave = []
@@ -31,13 +31,15 @@ def display_plots():
     fig.savefig('theoretic_waves.pdf')
     plt.show()
     
-
+start_time = time.time()
 pwm_pin = LED(12)
-for j in range(20):
-    for i in range(len(square_wave)):
-        if square_wave[i] == 1:
-            pwm_pin.on()
-        else:
-            pwm_pin.off()
+while time.time() - start_time < 120: 
+    for j in range(20):
+        for i in range(len(square_wave)):
+            if square_wave[i] == 1:
+                pwm_pin.on()
+            else:
+                pwm_pin.off()
 
-display_plots()
+# Debug
+#display_plots()
