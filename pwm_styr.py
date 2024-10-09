@@ -33,7 +33,7 @@ def display_plots():
 
 start_time = time.time()
 pwm_pin = LED(12)
-while time.time() - start_time < 120: 
+while time.time() - start_time < 60: 
     #for j in range(20):
     for i in range(len(square_wave)):
         if square_wave[i] == 1:
