@@ -126,65 +126,111 @@ def get_raw_data(oscilloscope):
     oscilloscope.write(':WAVeform:SOURce CHANnel1')
     oscilloscope.write(':AUToscale')
     oscilloscope.write(':WAVeform:FORMat ASCII')
-
+    
+    # Get preamble from Channel 1
     preamble = oscilloscope.query(':WAVeform:PREamble?')
     print(f'Preamble: {preamble}')
     print(f'Preamble type: {type(preamble)}')
     preamble_list = preamble.split(',')
     preamble_list = [float(val) for val in preamble_list]
-    print(f'{preamble_list}')
-    #df = pd.DataFrame(preamble)
-    #df.to_csv("./preamble_raw_data.csv", index=False)
+    print(f'{type(preamble_list)}')
+    df = pd.DataFrame(preamble_list)
+    df.to_csv("./preamble_raw_data.csv", index=False)
+
+    # Get raw data from Channel 1
     raw_data = oscilloscope.query(':WAVeform:DATA?')
-
-    #raw_data_ = raw_data.strip(' ')
     raw_data_list = raw_data.split(',')[1:]
-    
     raw_data_float = [float(val) for val in raw_data_list]
-
-    plt.plot(raw_data_float)
-    plt.show()
     df = pd.DataFrame(raw_data_float)
     df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
+
+    #plt.plot(raw_data_float)
+    #plt.show()
 
     # Get channel 2 raw data
     oscilloscope.timeout = 10000
     oscilloscope.write(':WAVeform:SOURce CHANnel2')
     oscilloscope.write(':AUToscale')
     oscilloscope.write(':WAVeform:FORMat ASCII')
+
+    # Get preamble from channel 2
+
+    preamble = oscilloscope.query(':WAVeform:PREamble?')
+    print(f'Preamble: {preamble}')
+    print(f'Preamble type: {type(preamble)}')
+    preamble_list = preamble.split(',')
+    preamble_list = [float(val) for val in preamble_list]
+    print(f'{type(preamble_list)}')
+    df = pd.DataFrame(preamble_list)
+    df.to_csv("./preamble_raw_data_channel2.csv", index=False)
+
+    # Get raw data from channel 2
     raw_data_channel2 = oscilloscope.query(':WAVeform:DATA?')
-
-    #raw_data_ = raw_data.strip(' ')
     raw_data_channel2_list = raw_data_channel2.split(',')[1:]
-    
     raw_data_channel2_float = [float(val) for val in raw_data_channel2_list]
-
-    plt.plot(raw_data_channel2_float)
-    plt.show()
     df = pd.DataFrame(raw_data_channel2_float)
     df.to_csv("./raw_data_channel2.csv", index=False)
     print("Data har exporterats till 'raw_data_channel2.csv'.")
 
+    plt.plot(raw_data_channel2_float)
+    plt.show()
+
 def show_raw_data(): 
     fig, ax = plt.subplots(3)
     #fig.suptitle(f'Data acquired from: {oscilloscope.query('*IDN?')}')
-    #raw_data.csv
-    df = pd.read_csv('./raw_data.csv')
-    ax[0].set_ylim(np.min(df), np.max(df))
     
-    ax[0].plot(df, color='blue')
-    ax[2].plot(df, color='blue')
+    # Read the csvs
 
-    #raw_data_channel2.csv
-    df = pd.read_csv('./raw_data_channel2.csv')
-    ax[1].set_ylim(np.min(df), np.max(df))
-    ax[1].plot(df, color='red')
-    ax[2].plot(df, color='red')
-
+    pre_amble_channel1 = pd.read_csv('./preamble_raw_data.csv')
+    pre_amble_channel2 = pd.read_csv('./preamble_raw_data_channel2.csv')
+    raw_data_channel1 = pd.read_csv('./raw_data.csv')
+    raw_data_channel2 = pd.read_csv('./raw_data_channel2.csv')
+    
+    ax[0].set_ylim(np.min(raw_data_channel1), np.max(raw_data_channel1))
+    ax[1].set_ylim(np.min(raw_data_channel2), np.max(raw_data_channel2))
+    
+    # Combined graph needs special treatment
+    if np.min(raw_data_channel1) > np.min(raw_data_channel2):
+        pre_amble_min = np.min(raw_data_channel2)
+    else:
+        pre_amble_min = np.min(raw_data_channel1)
+    if np.max(raw_data_channel1) > np.max(raw_data_channel2):
+        pre_amble_max = np.max(raw_data_channel1)
+    else:
+        pre_amble_max = np.max(raw_data_channel2)
+    
+    ax[2].set_ylim(pre_amble_min, pre_amble_max)
+    print(f'{type(pre_amble_channel1)}')
+    print(f'{pre_amble_channel1}')
+    #print(f'{pre_amble_channel1[4][1]}')
+    print(f'{type(pre_amble_channel1['0'][4])}')
+    xlim = pre_amble_channel1['0'][4] * pre_amble_channel1['0'][2]
+    x_ticks = []
+    x_positions = []
+    for i in range(11,1,-1):
+        x_ticks.append(xlim / (i))
+        x_positions.append(62500/i)
+    
+    
+    ax[0].set_xticks(x_ticks, x_positions)
+    ax[1].set_xticks(x_ticks, x_positions)
+    ax[2].set_xticks(x_ticks, x_positions)
+    
     ax[0].set_title('Channel 1: Pre-filter')
     ax[1].set_title('Channel 2: Post-filter')
     ax[2].set_title('Channel 1 & 2 combined')
+    
+    # Post data from Channel 1
+    
+    ax[0].plot(raw_data_channel1, color='blue')
+    ax[2].plot(raw_data_channel1, color='blue')
+    
+    # Post data from channel 2
+    
+    ax[1].plot(raw_data_channel2, color='red')
+    ax[2].plot(raw_data_channel2, color='red')
+        
     fig.savefig('output_data.pdf')
     plt.show()
 
