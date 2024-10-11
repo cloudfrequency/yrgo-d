@@ -28,6 +28,7 @@ def init_oscilloscope():
     oscilloscope.write_termination = '\n'
     oscilloscope.read_termination = '\n'
     
+    # Initiazlize the oscilloscope to the expected ratio
     oscilloscope.write(':CHANnel1:PROBe 1')
     oscilloscope.write(':CHANnel2:PROBe 1')
     oscilloscope.write(':AUToscale')
@@ -47,6 +48,7 @@ def init_oscilloscope():
 
     return oscilloscope
 
+# Not used
 def meas_freq(oscilloscope, no_of_measurments):
     frequency_data = []
     try:
@@ -61,6 +63,7 @@ def meas_freq(oscilloscope, no_of_measurments):
 
     return frequency_data
 
+# Not used
 def analyze_freq(frequency_data, low_freq, high_freq):
     length = len(frequency_data)
     print(f'Length: {length}')
@@ -72,6 +75,7 @@ def analyze_freq(frequency_data, low_freq, high_freq):
         else:
             print(f'Frequency within range {low_freq} - {high_freq}')
 
+# Not used
 def meas_voltage(oscilloscope):
     amplitude_data = []
     print(f'Meas_volt')
@@ -86,6 +90,7 @@ def meas_voltage(oscilloscope):
 
     return amplitude_data
 
+# Not used
 def meas_nduty(oscilloscope):
     nduty_data = []
     try:
@@ -100,9 +105,7 @@ def meas_nduty(oscilloscope):
 
     return nduty_data
 
-# -------------------------------------------------------------
-# Block 4: Visualisera och exportera
-# -------------------------------------------------------------
+# Not used
 def visualisera_exportera(frequency_data, amplitude_data):
     # Skapa en graf for frekvens
     plt.plot(frequency_data, marker='o', linestyle='-', color='b')
@@ -130,22 +133,16 @@ def visualisera_exportera(frequency_data, amplitude_data):
 def get_raw_data(oscilloscope):
     
     oscilloscope.write(":WAVeform:SOURce CHANnel1")
-    #oscilloscope.write(":AUToscale")
     oscilloscope.write(':CHANnel1:RANGe 8')
     oscilloscope.write(':TIMebase:RANGe 100E-3')
     oscilloscope.write(":WAVeform:FORMat ASCII")
     
     # Get preamble from Channel 1
-    #print(f'Preamble 1')
     oscilloscope.timeout = 10000
     preamble = oscilloscope.query(":WAVeform:PREamble?")
-    #print(f'Preamble 1 done: {preamble}')
-
-    oscilloscope.timeout = 10000
-    
+    oscilloscope.timeout = 10000 
     preamble_list = preamble.split(',')
     preamble_list = [float(val) for val in preamble_list]
-    #print(f'{type(preamble_list)}')
     df = pd.DataFrame(preamble_list)
     df.to_csv("./preamble_raw_data.csv", index=False)
     
@@ -157,28 +154,19 @@ def get_raw_data(oscilloscope):
     df.to_csv("./raw_data.csv", index=False)
     print("Data har exporterats till 'raw_data.csv'.")
 
-    #plt.plot(raw_data_float)
-    #plt.show()
-
     # Get channel 2 raw data
     oscilloscope.timeout = 1000
     oscilloscope.write(':WAVeform:SOURce CHANnel2')
     oscilloscope.write(':CHANnel2:RANGe 8')
-    #oscilloscope.write(':CHANnel1:OFFSet 0')
-    #oscilloscope.write(':TIMebase:RANGe 40E-3')
     oscilloscope.write(':TIMebase:DELay 0')
-    #oscilloscope.write(':AUToscale')
     oscilloscope.write(':TIMebase:RANGe 100E-3')
     oscilloscope.write(':WAVeform:FORMat ASCII')
     oscilloscope.timeout = 10000
+
     # Get preamble from channel 2
-    
     preamble = oscilloscope.query(':WAVeform:PREamble?')
-    #print(f'Preamble: {preamble}')
-    #print(f'Preamble type: {type(preamble)}')
     preamble_list = preamble.split(',')
     preamble_list = [float(val) for val in preamble_list]
-    #print(f'{type(preamble_list)}')
     df = pd.DataFrame(preamble_list)
     df.to_csv("./preamble_raw_data_channel2.csv", index=False)
     
@@ -197,25 +185,17 @@ def show_raw_data():
     fig, ax = plt.subplots(3)
     fig.suptitle(f"Data acquired from: {oscilloscope.query('*IDN?')}")
     
-    # Read the csvs
-
+    # Read the csv-files
     pre_amble_channel1 = pd.read_csv('./preamble_raw_data.csv')
     pre_amble_channel2 = pd.read_csv('./preamble_raw_data_channel2.csv')
     raw_data_channel1 = pd.read_csv('./raw_data.csv')
     raw_data_channel2 = pd.read_csv('./raw_data_channel2.csv')
-    print(f'Before ylim')
-    ax[0].set_ylim(0,2)
-    ax[1].set_ylim(-1, 1)
-    print(f"raw_data_channel1.min(): {raw_data_channel1['0'].min()}")
-    print(f"type: raw_data_channel1.min() : {type(raw_data_channel1['0'].min())}")
+
+    # Set all the parameters for the graphs, calculated from the preamble data of oscilloscope
     ax[0].set_ylim(raw_data_channel1['0'].min(), raw_data_channel1['0'].max())
     ax[1].set_ylim(raw_data_channel2['0'].min(), raw_data_channel2['0'].max())
-    #print(f'npmin : {np.min(raw_data_channel1)}')
-    #ax[0].set_ylim(np.min(raw_data_channel1), np.max(raw_data_channel1))
-    #ax[1].set_ylim(np.min(raw_data_channel2), np.max(raw_data_channel2))
-    print(f'After ylim')
-    # Combined graph needs special treatment
-    print(f'Before np.min')
+
+    # Combined graph needs gets the highest amplitude as the scale
     if raw_data_channel1['0'].min() > raw_data_channel2['0'].min():
         pre_amble_min = raw_data_channel2['0'].min()
     else:
@@ -224,10 +204,10 @@ def show_raw_data():
         pre_amble_max = raw_data_channel1['0'].max()
     else:
         pre_amble_max = raw_data_channel2['0'].max()
-    print(f'After min/max')
     
     ax[2].set_ylim(pre_amble_min, pre_amble_max)
 
+    # X-axis is calculated from (number of ticks) * (time of each tick) 
     xlim = pre_amble_channel1['0'][4] * pre_amble_channel1['0'][2]
     x_ticks = []
     x_positions = []
@@ -236,11 +216,9 @@ def show_raw_data():
         x_ticks.append(round((xlim / 5)*i, 3))
         
     x_positions = [0, 12500, 25000, 37500, 50000, 62500]
-    print(f'Before xticks')
     ax[0].set_xticks(x_positions,x_ticks)
     ax[1].set_xticks(x_positions,x_ticks)
     ax[2].set_xticks(x_positions, x_ticks)
-    print(f'After xticks')
     ax[0].set_title('Channel 1: Pre-filter')
     ax[1].set_title('Channel 2: Post-filter')
     ax[2].set_title('Channel 1 & 2 combined')
@@ -260,12 +238,10 @@ def show_raw_data():
 
 # Main below
 
-# Variables:
-
+# Variables: (Not used anymore)
 low_freq = 40
 high_freq = 60
 frequency = 0
-#channel = 1
 no_of_measurments = 1
 
 # Init the oscilloscope.
@@ -281,7 +257,6 @@ try:
 except Exception as e:
     print(f'Measurement failed: {e}')
 
-
 analyze_freq(frequency_data, low_freq, high_freq)
 
 try:
@@ -293,8 +268,6 @@ except Exception as e:
 
 get_raw_data(oscilloscope)
 show_raw_data()
-
-# Här ska all data vara hämtad
 
 # Close the connection
 oscilloscope.close()
